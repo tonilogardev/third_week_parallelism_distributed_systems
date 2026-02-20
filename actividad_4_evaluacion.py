@@ -4,7 +4,7 @@ import multiprocessing
 import numpy as np
 import pprint
 
-# Importar funciones de las otras actividades
+# Import
 from actividad_4_matrices import (
     run_secuencial, 
     run_process_manager, 
@@ -21,7 +21,7 @@ def run_simulation(N, M, method_name, method_func, num_runs=3):
     tiempos = []
     
     for _ in range(num_runs):
-        # Generar datos limpios para cada run
+        # dDtos
         np.random.seed(int(time.time() * 1000) % 2**32)
         A_bloques = [[np.random.rand(M, M) for _ in range(N)] for _ in range(N)]
         B_bloques = [[np.random.rand(M, M) for _ in range(N)] for _ in range(N)]
@@ -53,9 +53,9 @@ if __name__ == "__main__":
     
     # Parámetros fijos para test: Bloques de 50x50, iremos variando el número de bloques N
     # Piden P=1, P=2, P=4, P=8 y N=1, N=2, N=4, N=8
-    # En nuestro código N es el número de bloques horizontales/verticales, 
-    # por lo que el numero total de bloques es N*N. Las celdas de matriz total es (N*M)x(N*M)
-    # Por simplicidad en la simulación limitaremos los casos para que acabe en tiempo razonable.
+    # N es el número de bloques horizontales/verticales, 
+    # El número total de bloques es N*N. Las celdas de matriz total es (N*M)x(N*M)
+    # Limitaremos los casos para que acabe en tiempo razonable.
     
     M = 50 
     escenarios_N = [2, 4, 6] # Matriz de 2x2 bloques, 4x4, 6x6. 
@@ -70,8 +70,6 @@ if __name__ == "__main__":
         t_sec = run_simulation(n, M, "Secuencial", run_secuencial)
         print(f"  Secuencial (T1)\t: {t_sec:.4f} s")
         
-        # Métodos paralelos (El número de workers P está fijado a N*N procesos en Process, 
-        # o a cpu_count() en Pool. Lo tomamos constante como 'p' teórico)
         
         # 2. Process + Manager
         t_man = run_simulation(n, M, "Manager", run_process_manager)

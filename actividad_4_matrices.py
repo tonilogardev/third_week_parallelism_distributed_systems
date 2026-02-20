@@ -4,9 +4,7 @@ import time
 import multiprocessing
 from multiprocessing import Pool, cpu_count
 
-# ============================================================
-# FUNCIONES MATEMÁTICAS PURAS (Sin NumPy para cálculos)
-# ============================================================
+
 
 def multiply_manual(A, B):
     """Multiplicación de matrices (filas x columnas) en Python puro"""
@@ -30,9 +28,8 @@ def sumar_manual(A, B):
             C[i][j] = A[i][j] + B[i][j]
     return np.array(C)
 
-# ============================================================
-# VARIANTE 1: SECUENCIAL (Para comparar T1)
-# ============================================================
+
+# Comparar T1
 def calcular_un_bloque_secuencial(i, j, fila_A, col_B):
     N = len(fila_A)
     M = len(fila_A[0])
@@ -52,9 +49,8 @@ def run_secuencial(A_bloques, B_bloques):
             C_bloques[i][j] = calcular_un_bloque_secuencial(i, j, fila_A, col_B)
     return C_bloques
 
-# ============================================================
-# VARIANTE 2: MULTIPROCESSING CON MANAGER (Dictionary)
-# ============================================================
+
+# Multiprocesing con manager
 def calcular_un_bloque_manager(i, j, fila_A, col_B, dict_manager):
     N = len(fila_A)
     M = len(fila_A[0])
@@ -99,9 +95,8 @@ def run_process_manager(A_bloques, B_bloques):
             
     return C_bloques
 
-# ============================================================
-# VARIANTE 3: MULTIPROCESSING CON QUEUE
-# ============================================================
+
+# Multi con Queue
 def calcular_un_bloque_queue(fila_A, col_B, cola):
     N = len(fila_A)
     M = len(fila_A[0])
@@ -150,9 +145,8 @@ def run_process_queue(A_bloques, B_bloques):
         
     return C_bloques
 
-# ============================================================
-# VARIANTE 4: MULTIPROCESSING CON POOL (Map)
-# ============================================================
+
+# Multiprocesing con pool
 def calcular_un_bloque_pool(datos):
     """
     Función para Pool. Recibe todo en una tupla porque usa map.
@@ -185,9 +179,8 @@ def run_pool(A_bloques, B_bloques):
         
     return C_bloques
 
-# ============================================================
-# CÓDIGO PRINCIPAL / TEST DE VALIDACIÓN
-# ============================================================
+
+# Validación
 if __name__ == "__main__":
     print("--- ACTIVIDAD 4: MULTIPLICACIÓN DE MATRICES (TODAS LAS VARIANTES) ---")
     

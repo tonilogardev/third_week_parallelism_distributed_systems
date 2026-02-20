@@ -6,16 +6,13 @@ from datetime import datetime
 import multiprocessing
 from multiprocessing import Pool, cpu_count, Process, Queue
 
-# ============================================================
-# CONFIGURACIÓN
-# ============================================================
+# Configuración de fechas
 START_DATE = "2013-02-01"
 END_DATE = "2024-12-31"
 SYMBOLS = ["AAPL", "MSFT", "GOOG", "AMZN", "META", "TSLA", "NVDA", "JPM", "JNJ", "V"]
 
-# ============================================================
-# FUNCIONES DE DESCARGA Y PROCESAMIENTO
-# ============================================================
+
+# Descarga y procesamiento
 
 def download_and_process(ticker):
     """
@@ -97,9 +94,8 @@ def run_finance_evaluation():
     print("="*60)
     print(f"Procesando {len(SYMBOLS)} símbolos...")
     
-    # ------------------------------------------------------------
-    # 1. EJECUCIÓN SECUENCIAL (Para calcular T1 - Speedup)
-    # ------------------------------------------------------------
+    
+    # calcular T1 - Speedup
     print("\n--- Ejecución Secuencial ---")
     start_time_sec = time.time()
     resultados_sec = []
@@ -111,9 +107,8 @@ def run_finance_evaluation():
     t1 = end_time_sec - start_time_sec
     print(f"Tiempo total ejecución secuencial (T1): {t1:.4f} s")
     
-    # ------------------------------------------------------------
-    # 2. EJECUCIÓN PARALELA (Pool - Para calcular Tp)
-    # ------------------------------------------------------------
+    
+    # Pool - Para calcular Tp
     print("\n--- Ejecución Paralela (Pool) ---")
     num_processes = min(len(SYMBOLS), cpu_count())
     print(f"Usando {num_processes} procesos workers en el Pool.")
@@ -133,7 +128,7 @@ def run_finance_evaluation():
     # Filtrar resultados válidos
     resultados_validos = [r for r in resultados_par if r is not None]
     
-    # Agregación global (rápida, en proceso principal)
+    # Agregación global 
     semanales = [r[1] for r in resultados_validos]
     
     if semanales:
@@ -143,8 +138,6 @@ def run_finance_evaluation():
         print("\n--- Resultado Global (Semanal) Correcto ---")
         print(df_global.head())
 
-# ============================================================
-# CÓDIGO PRINCIPAL
-# ============================================================
+
 if __name__ == "__main__":
     run_finance_evaluation()
