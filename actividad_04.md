@@ -12,7 +12,7 @@
 
 > El uso de `multiprocessing` en **Google Colab** nos ha dado problemas para la realización de la entrega.
 
-Hemos extraído el código base de la entrega de la Semana 1 [001_week_CIV.ipynb](001_week_CIV.ipynb) y lo hemos convertido en dos scripts de Python independientes:
+Hemos extraído el código base de la entrega de la Semana 1 [001_week_CIV.ipynb](week_01/001_week_CIV.ipynb) y lo hemos convertido en dos scripts de Python independientes:
 
 - **[actividad_4_matrices.py](actividad_4_matrices.py)**: Lógica de multiplicación de matrices.
 - **[actividad_4_finance.py](actividad_4_finance.py)**: Lógica de procesamiento de datos financieros.
@@ -28,7 +28,7 @@ Para dejar los algoritmos principales muy limpios, hemos orquestado estas prueba
 
 Ejecutando nuestro script base de evaluación `actividad_4_evaluacion.py` implementamos **Process+Manager**, **Process+Queue** y **Pool.map**:
 
-![Resultados Matrices](evaluation_01.png)
+![Resultados Matrices](img/evaluation_01.png)
 
 A medida que el tamaño de los datos iniciales ($N$) asciende y el problema matemático engrosa en complejidad para la computación de CPU, paralelizar el algoritmo a nivel hardware logra disipar en gran medida el tiempo consumido enviando la información entre la memoria de los procesos Python mediante serialización continua (*IPC Overhead*), obteniendo así un **Speedup escalable** y que tiende a la óptima eficiencia.
 
@@ -38,7 +38,7 @@ A medida que el tamaño de los datos iniciales ($N$) asciende y el problema mate
 
 En la segunda mitad de las métricas (`actividad_4_evaluacion.py`) obtenemos el desempeño de utilizar una estructura concurrente (`multiprocessing.Pool`) para la obtención remota de datos bursátiles (*I/O network bottleneck*).
 
-![Resultados Finanzas](evaluation_02.png)
+![Resultados Finanzas](img/evaluation_02.png)
 
 Es aquí donde el multiprocesamiento funciona sin ninguna penalización. Cuando el proceso recae únicamente en los tiempos de espera del TCP y servidor de destino, distribuir dichas transferencias en la CPU logra desatar el cuello de botella en su totalidad sin *IPC overhead* anterior; la concurrencia es capaz de escalar de un modo veloz sobre el propio hardware.
 
