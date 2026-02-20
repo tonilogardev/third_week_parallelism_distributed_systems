@@ -12,7 +12,7 @@
 
 > El uso de `multiprocessing` en **Google Colab** nos ha dado problemas para la realización de la entrega.
 
-Hemos extraído el código base de la entrega de la Semana 1 [001_week_CIV.ipynb](week_01/001_week_CIV.ipynb) y lo hemos convertido en dos scripts de Python independientes:
+Hemos extraído el código base de la entrega de la Semana 1 **[001_week_CIV.ipynb](week_01/001_week_CIV.ipynb)** y lo hemos convertido en dos scripts de Python independientes:
 
 - **[actividad_4_matrices.py](actividad_4_matrices.py)**: Lógica de multiplicación de matrices.
 - **[actividad_4_finance.py](actividad_4_finance.py)**: Lógica de procesamiento de datos financieros.
@@ -26,7 +26,7 @@ Para dejar los algoritmos principales muy limpios, hemos orquestado estas prueba
 
 ## 2. Evaluación de Multiplicación de Matrices (CPU-Bound)
 
-Ejecutando nuestro script base de evaluación `actividad_4_evaluacion.py` implementamos **Process+Manager**, **Process+Queue** y **Pool.map**:
+Ejecutando nuestro script base de evaluación **[actividad_4_evaluacion.py](actividad_4_evaluacion.py)** implementamos **Process+Manager**, **Process+Queue** y **Pool.map**:
 
 ![Resultados Matrices](img/evaluation_01.png)
 
