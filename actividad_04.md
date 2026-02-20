@@ -46,6 +46,6 @@ Es aquí donde el multiprocesamiento funciona sin ninguna penalización. Cuando 
 
 ## 4. Conclusión
 
-1. Entendemos que **`multiprocessing` es indispensable para saltarse el GIL** en computación puramente basada en aritmética de software (CPU-bound) como el caso de nuestras matrices, logrando paralelismo por hardware.
-2. **Queue vs Manager**: De forma consistente en las simulaciones, el uso de `.put()` con `Queue` es ligeramente más veloz que la delegación de punteros que hace `Manager().dict()`.
-3. El paralelismo de **I/O bound es considerablemente más simple y eficiente** con Pool.
+1. Entendemos que **`multiprocessing` es indispensable para saltarse el GIL** en computación puramente basada en aritmética de software (CPU-bound) como el caso de nuestras matrices, logrando paralelismo por hardware real.
+2. **Queue vs Manager**: De forma consistente en las simulaciones de CPU-bound, el uso de `.put()` con `Queue` ha resultado ser ligeramente más veloz que la delegación de punteros que hace `Manager().dict()`.
+3. **Análisis Financiero (I/O Bound)**: Se concluye que el paralelismo basado en I/O es considerablemente más simple de implementar y eficiente al escalar. Al estar limitado por red y no por CPU, las esperas TCP se solapan perfectamente sin sufrir las graves penalizaciones del *Inter-Process Communication (IPC)* que sufren las matrices.
