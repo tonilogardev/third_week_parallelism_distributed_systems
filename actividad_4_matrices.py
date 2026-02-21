@@ -100,22 +100,21 @@ def run_process_manager(A_bloques, B_bloques):
     return C_bloques
 
 # ============================================================
-# VARIANTE 3: MULTIPROCESSING CON QUEUE
+# VARIANTE 3: MULTIPROCESSING CON QUEUE (Productor-Consumidor)
 # ============================================================
-def calcular_un_bloque_queue(fila_A, col_B, cola):
+def productor_multiplicaciones(fila_A, col_B, cola):
+    """Productor: Solo calcula multiplicaciones y las encola"""
     N = len(fila_A)
-    M = len(fila_A[0])
-    bloque_res = np.zeros((M, M))
     for k in range(N):
         prod = multiply_manual(fila_A[k], col_B[k])
-        bloque_res = sumar_manual(bloque_res, prod)
-    cola.put(bloque_res)
+        cola.put(prod) # Encolar cada producto intermedio
 
 def run_process_queue(A_bloques, B_bloques):
     N = len(A_bloques)
     colas = []
     procesos = []
     
+    # 1. Lanzar Procesos Productores (Calculan NxN multiplicaciones)
     for i in range(N):
         proceso_fila = []
         colas_fila = []
@@ -128,26 +127,32 @@ def run_process_queue(A_bloques, B_bloques):
             col_B = [B_bloques[k][j] for k in range(N)]
             
             p = multiprocessing.Process(
-                target=calcular_un_bloque_queue,
+                target=productor_multiplicaciones,
                 args=(fila_A, col_B, cola_actual)
             )
             p.start()
             proceso_fila.append(p)
         procesos.append(proceso_fila)
         
+    # 2. Proceso Consumidor (Main): Escucha las colas, extrae y suma
+    C_bloques = []
+    M = len(A_bloques[0][0])
+    for i in range(N):
+        fila_res = []
+        for j in range(N):
+            bloque_res = np.zeros((M, M))
+            # Para cada bloque de salida, extraemos N multiplicaciones de la cola
+            for k in range(N):
+                prod = colas[i][j].get() # Consumir de la cola iterativamente
+                bloque_res = sumar_manual(bloque_res, prod) # Agregación (Suma)
+            fila_res.append(bloque_res)
+        C_bloques.append(fila_res)
+        
+    # 3. Esperar finalización de Productores
     for i in range(N):
         for j in range(N):
             procesos[i][j].join()
             
-    # Recuperar resultados
-    C_bloques = []
-    for i in range(N):
-        fila_res = []
-        for j in range(N):
-            matriz_actual = colas[i][j].get()
-            fila_res.append(matriz_actual)
-        C_bloques.append(fila_res)
-        
     return C_bloques
 
 # ============================================================
