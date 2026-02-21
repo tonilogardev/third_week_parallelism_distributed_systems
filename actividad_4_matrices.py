@@ -4,9 +4,6 @@ import time
 import multiprocessing
 from multiprocessing import Pool, cpu_count
 
-# ============================================================
-# FUNCIONES MATEMÁTICAS PURAS (Sin NumPy para cálculos)
-# ============================================================
 
 def multiply_manual(A, B):
     """Multiplicación de matrices (filas x columnas) en Python puro"""
@@ -30,9 +27,8 @@ def sumar_manual(A, B):
             C[i][j] = A[i][j] + B[i][j]
     return np.array(C)
 
-# ============================================================
-# VARIANTE 1: SECUENCIAL (Para comparar T1)
-# ============================================================
+
+# Para comparar T1
 def calcular_un_bloque_secuencial(i, j, fila_A, col_B):
     N = len(fila_A)
     M = len(fila_A[0])
@@ -52,9 +48,8 @@ def run_secuencial(A_bloques, B_bloques):
             C_bloques[i][j] = calcular_un_bloque_secuencial(i, j, fila_A, col_B)
     return C_bloques
 
-# ============================================================
-# VARIANTE 2: MULTIPROCESSING CON MANAGER (Dictionary)
-# ============================================================
+
+# Multiprocessing con manager
 def calcular_un_bloque_manager(i, j, fila_A, col_B, dict_manager):
     N = len(fila_A)
     M = len(fila_A[0])
@@ -99,9 +94,8 @@ def run_process_manager(A_bloques, B_bloques):
             
     return C_bloques
 
-# ============================================================
-# VARIANTE 3: MULTIPROCESSING CON QUEUE (Productor-Consumidor)
-# ============================================================
+
+# Multiprocessing con queue
 def productor_multiplicaciones(fila_A, col_B, cola):
     """Productor: Solo calcula multiplicaciones y las encola"""
     N = len(fila_A)
@@ -114,7 +108,7 @@ def run_process_queue(A_bloques, B_bloques):
     colas = []
     procesos = []
     
-    # 1. Lanzar Procesos Productores (Calculan NxN multiplicaciones)
+    # Lanzar Procesos Productores NxN
     for i in range(N):
         proceso_fila = []
         colas_fila = []
@@ -134,7 +128,7 @@ def run_process_queue(A_bloques, B_bloques):
             proceso_fila.append(p)
         procesos.append(proceso_fila)
         
-    # 2. Proceso Consumidor (Main): Escucha las colas, extrae y suma
+    # Escucha las colas, extrae y suma
     C_bloques = []
     M = len(A_bloques[0][0])
     for i in range(N):
@@ -148,16 +142,15 @@ def run_process_queue(A_bloques, B_bloques):
             fila_res.append(bloque_res)
         C_bloques.append(fila_res)
         
-    # 3. Esperar finalización de Productores
+    # Esperar finalización de Productores
     for i in range(N):
         for j in range(N):
             procesos[i][j].join()
             
     return C_bloques
 
-# ============================================================
-# VARIANTE 4: MULTIPROCESSING CON POOL (Map)
-# ============================================================
+
+# # Multiprocessing con pool
 def calcular_un_bloque_pool(datos):
     """
     Función para Pool. Recibe todo en una tupla porque usa map.
@@ -192,9 +185,7 @@ def run_pool(A_bloques, B_bloques, num_processes=None):
         
     return C_bloques
 
-# ============================================================
-# CÓDIGO PRINCIPAL / TEST DE VALIDACIÓN
-# ============================================================
+
 if __name__ == "__main__":
     print("--- ACTIVIDAD 4: MULTIPLICACIÓN DE MATRICES (TODAS LAS VARIANTES) ---")
     

@@ -6,16 +6,14 @@ from datetime import datetime
 import multiprocessing
 from multiprocessing import Pool, cpu_count, Process, Queue
 
-# ============================================================
+
 # CONFIGURACIÓN
-# ============================================================
 START_DATE = "2013-02-01"
 END_DATE = "2024-12-31"
 SYMBOLS = ["AAPL", "MSFT", "GOOG", "AMZN", "META", "TSLA", "NVDA", "JPM", "JNJ", "V"]
 
-# ============================================================
+
 # FUNCIONES DE DESCARGA Y PROCESAMIENTO
-# ============================================================
 
 def download_and_process(ticker):
     """
@@ -26,7 +24,7 @@ def download_and_process(ticker):
     """
     print(f"[{multiprocessing.current_process().name}] Iniciando {ticker}...")
     
-    # 1. Preparar parámetros de fecha
+    # Fecha
     try:
         period1 = int(datetime.strptime(START_DATE, "%Y-%m-%d").timestamp())
         period2 = int(datetime.strptime(END_DATE, "%Y-%m-%d").timestamp())
@@ -34,7 +32,7 @@ def download_and_process(ticker):
         print(f"Error fechas: {e}")
         return None
 
-    # 2. Configurar Request
+    # Configurar Request
     url = f"https://query1.finance.yahoo.com/v8/finance/chart/{ticker}"
     params = {
         "formatted": "true",
@@ -48,7 +46,7 @@ def download_and_process(ticker):
         "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36"
     }
 
-    # 3. Descargar
+    # Descargar
     try:
         response = requests.get(url, headers=headers, params=params, timeout=10)
         response.raise_for_status()
@@ -75,7 +73,7 @@ def download_and_process(ticker):
         })
         df.set_index("Date", inplace=True)
         
-        # 4. Agregaciones
+        
         agg_dict = {
             'Low': 'min', 'High': 'max', 
             'Open': 'first', 'Close': 'last', 'Volume': 'sum'
@@ -97,9 +95,8 @@ def run_finance_evaluation():
     print("="*60)
     print(f"Procesando {len(SYMBOLS)} símbolos...")
     
-    # ------------------------------------------------------------
-    # 1. EJECUCIÓN SECUENCIAL (Para calcular T1 - Speedup)
-    # ------------------------------------------------------------
+
+    # Calcular T1 - Speedup
     print("\n--- Ejecución Secuencial ---")
     start_time_sec = time.time()
     resultados_sec = []
@@ -111,9 +108,8 @@ def run_finance_evaluation():
     t1 = end_time_sec - start_time_sec
     print(f"Tiempo total ejecución secuencial (T1): {t1:.4f} s")
     
-    # ------------------------------------------------------------
-    # 2. EJECUCIÓN PARALELA (Pool - Para calcular Tp)
-    # ------------------------------------------------------------
+   
+    # Pool - Para calcular Tp
     print("\n--- Ejecución Paralela (Pool) ---")
     num_processes = min(len(SYMBOLS), cpu_count())
     print(f"Usando {num_processes} procesos workers en el Pool.")
@@ -133,7 +129,7 @@ def run_finance_evaluation():
     # Filtrar resultados válidos
     resultados_validos = [r for r in resultados_par if r is not None]
     
-    # Agregación global (rápida, en proceso principal)
+    
     semanales = [r[1] for r in resultados_validos]
     
     if semanales:
@@ -143,8 +139,6 @@ def run_finance_evaluation():
         print("\n--- Resultado Global (Semanal) Correcto ---")
         print(df_global.head())
 
-# ============================================================
-# CÓDIGO PRINCIPAL
-# ============================================================
+
 if __name__ == "__main__":
     run_finance_evaluation()
